@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运转盘游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 data-text="幸运大转盘" id="title">
+            幸运大转盘
+            <div class="title-particles" id="titleParticles"></div>
+        </h1>
+
+        <div class="main-content">
+            <div class="wheel-wrapper">
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <button id="spinBtn" class="spin-button">开始抽奖</button>
+                <div id="result" class="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

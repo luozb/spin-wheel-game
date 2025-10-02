@@ -1,0 +1,788 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow: hidden;
+    height: 100vh;
+}
+
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+    background: url('background.png') center center / cover no-repeat fixed;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+    animation: backgroundPan 60s ease-in-out infinite;
+}
+
+@keyframes backgroundPan {
+    0%, 100% {
+        background-position: center center;
+    }
+    50% {
+        background-position: 55% 48%;
+    }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.02);
+    pointer-events: none;
+}
+
+/* 海浪动画层 */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background:
+        linear-gradient(
+            to top,
+            rgba(64, 224, 208, 0.15) 0%,
+            rgba(64, 224, 208, 0.08) 30%,
+            transparent 100%
+        );
+    animation: waveFlow 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes waveFlow {
+    0%, 100% {
+        transform: translateX(0) scaleY(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateX(-20px) scaleY(1.05);
+        opacity: 0.8;
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -20px); }
+}
+
+.container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    width: 100%;
+}
+
+.wheel-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    min-width: 300px;
+}
+
+h1 {
+    font-size: 3.8em;
+    margin-bottom: 50px;
+    font-weight: 900;
+    font-family: 'Microsoft YaHei', 'Arial', sans-serif;
+    color: #FFD700;
+    letter-spacing: 8px;
+    position: relative;
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(255, 215, 0, 0.6),
+        0 0 40px rgba(255, 165, 0, 0.4),
+        2px 2px 4px rgba(0, 0, 0, 0.8);
+    animation: titleGlow 2s ease-in-out infinite;
+}
+
+/* 粒子容器 */
+.title-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+}
+
+/* 粒子 */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #FFD700, #FFA500);
+    border-radius: 50%;
+    box-shadow:
+        0 0 6px rgba(255, 215, 0, 0.8),
+        0 0 12px rgba(255, 215, 0, 0.4);
+    animation: particleFloat 3s ease-in-out infinite;
+    opacity: 0;
+}
+
+.particle.large {
+    width: 6px;
+    height: 6px;
+    box-shadow:
+        0 0 10px rgba(255, 215, 0, 1),
+        0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes titleGlow {
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(255, 215, 0, 0.6),
+            0 0 40px rgba(255, 165, 0, 0.4),
+            2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    50% {
+        text-shadow:
+            0 0 20px rgba(255, 215, 0, 1),
+            0 0 40px rgba(255, 215, 0, 0.8),
+            0 0 60px rgba(255, 165, 0, 0.6),
+            2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) translateX(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-80px) translateX(var(--tx)) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.wheel-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+    animation: wheelFloat 3s ease-in-out infinite;
+    padding: 30px;
+}
+
+.wheel-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border-radius: 50%;
+    background:
+        conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            rgba(255, 215, 0, 0.1) 45deg,
+            transparent 90deg,
+            rgba(255, 215, 0, 0.1) 135deg,
+            transparent 180deg,
+            rgba(255, 215, 0, 0.1) 225deg,
+            transparent 270deg,
+            rgba(255, 215, 0, 0.1) 315deg,
+            transparent 360deg
+        );
+    animation: decorationRotate 20s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wheel-container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 215, 0, 0.4);
+    animation: decorationRotateReverse 30s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes decorationRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes decorationRotateReverse {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+@keyframes wheelFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.wheel-container.spinning {
+    animation: none;
+}
+
+#wheelCanvas {
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 8px rgba(255, 255, 255, 0.9),
+        0 0 0 12px rgba(255, 215, 0, 0.5),
+        0 10px 50px rgba(0, 0, 0, 0.6),
+        0 0 100px rgba(138, 43, 226, 0.4),
+        0 0 150px rgba(255, 255, 255, 0.3),
+        inset 0 0 50px rgba(255, 255, 255, 0.15);
+    background: white;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+#wheelCanvas.spinning {
+    box-shadow:
+        0 0 0 8px rgba(255, 255, 255, 1),
+        0 0 0 12px rgba(255, 215, 0, 0.8),
+        0 0 0 20px rgba(255, 165, 0, 0.4),
+        0 10px 60px rgba(255, 215, 0, 0.8),
+        0 0 120px rgba(255, 215, 0, 0.9),
+        0 0 180px rgba(255, 140, 0, 0.6),
+        inset 0 0 50px rgba(255, 255, 255, 0.3);
+    animation: wheelGlow 0.5s ease-in-out infinite;
+}
+
+@keyframes wheelGlow {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.pointer {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    border-top: 60px solid #ff3333;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    filter: drop-shadow(0 6px 12px rgba(255, 0, 0, 0.7))
+            drop-shadow(0 0 25px rgba(255, 0, 0, 0.5))
+            drop-shadow(0 0 40px rgba(255, 215, 0, 0.3));
+    animation: pointerBounce 0.8s ease-in-out infinite;
+}
+
+.pointer::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, #ffffff, #ffff00, #ff3333);
+    border-radius: 50%;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow:
+        0 0 20px rgba(255, 215, 0, 1),
+        0 0 30px rgba(255, 51, 51, 0.8),
+        inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.pointer::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.4), transparent);
+    border-radius: 50%;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: pointerGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pointerGlow {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateX(-50%) scale(1.3);
+        opacity: 1;
+    }
+}
+
+@keyframes pointerBounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+        filter: drop-shadow(0 5px 10px rgba(255, 0, 0, 0.6))
+                drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+    }
+    50% {
+        transform: translateX(-50%) translateY(8px) scale(1.1);
+        filter: drop-shadow(0 8px 15px rgba(255, 0, 0, 0.8))
+                drop-shadow(0 0 30px rgba(255, 0, 0, 0.6));
+    }
+}
+
+.spin-button {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8c42 30%, #ffa500 60%, #ffd700 100%);
+    background-size: 200% 200%;
+    color: white;
+    border: 4px solid rgba(255, 255, 255, 1);
+    padding: 18px 50px;
+    font-size: 1.4em;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow:
+        0 0 0 3px rgba(255, 215, 0, 0.6),
+        0 8px 25px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 215, 0, 0.6),
+        inset 0 3px 15px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-weight: 900;
+    position: relative;
+    overflow: hidden;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+    letter-spacing: 2px;
+    animation: buttonPulse 2s ease-in-out infinite;
+}
+
+@keyframes buttonPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 3px rgba(255, 215, 0, 0.6),
+            0 8px 25px rgba(0, 0, 0, 0.5),
+            0 0 30px rgba(255, 215, 0, 0.6),
+            inset 0 3px 15px rgba(255, 255, 255, 0.4),
+            inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+        background-position: 0% 50%;
+    }
+    50% {
+        box-shadow:
+            0 0 0 3px rgba(255, 215, 0, 0.8),
+            0 8px 25px rgba(0, 0, 0, 0.5),
+            0 0 50px rgba(255, 215, 0, 0.8),
+            inset 0 3px 15px rgba(255, 255, 255, 0.5),
+            inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+        background-position: 100% 50%;
+    }
+}
+
+.spin-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.spin-button:hover:not(:disabled)::before {
+    width: 300px;
+    height: 300px;
+}
+
+.spin-button:hover:not(:disabled) {
+    transform: translateY(-5px) scale(1.08);
+    box-shadow:
+        0 0 0 4px rgba(255, 215, 0, 0.9),
+        0 12px 40px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(255, 215, 0, 0.9),
+        0 0 100px rgba(255, 165, 0, 0.5),
+        inset 0 3px 15px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.2);
+    animation: none;
+}
+
+.spin-button:active:not(:disabled) {
+    transform: translateY(-2px) scale(1.02);
+}
+
+.spin-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+    filter: grayscale(0.3);
+}
+
+.result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    width: 100%;
+    z-index: 1000;
+}
+
+.result-text {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe8b3 100%);
+    padding: 25px 35px;
+    border-radius: 20px;
+    font-size: 1.3em;
+    font-weight: 900;
+    color: #ff6b6b;
+    box-shadow:
+        0 0 0 4px rgba(255, 255, 255, 1),
+        0 0 0 8px rgba(255, 215, 0, 0.8),
+        0 15px 40px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(255, 215, 0, 0.6),
+        inset 0 3px 15px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 10px rgba(255, 215, 0, 0.3);
+    animation: resultSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), resultGlow 2s ease-in-out infinite 0.6s;
+    text-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(255, 107, 107, 0.5);
+    word-wrap: break-word;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-text::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shine 3s linear infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes resultGlow {
+    0%, 100% {
+        box-shadow:
+            0 0 0 4px rgba(255, 255, 255, 1),
+            0 0 0 8px rgba(255, 215, 0, 0.8),
+            0 15px 40px rgba(0, 0, 0, 0.6),
+            0 0 60px rgba(255, 215, 0, 0.6),
+            inset 0 3px 15px rgba(255, 255, 255, 0.8),
+            inset 0 -3px 10px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 0 4px rgba(255, 255, 255, 1),
+            0 0 0 8px rgba(255, 215, 0, 1),
+            0 15px 40px rgba(0, 0, 0, 0.6),
+            0 0 80px rgba(255, 215, 0, 0.9),
+            inset 0 3px 15px rgba(255, 255, 255, 1),
+            inset 0 -3px 10px rgba(255, 215, 0, 0.5);
+    }
+}
+
+@keyframes resultSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(50px) scale(0.8);
+    }
+    60% {
+        transform: translateX(-10px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes resultPop {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.5) rotate(-5deg);
+    }
+    50% {
+        transform: translateY(10px) scale(1.1) rotate(2deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 彩纸效果 */
+.confetti {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: #f0f;
+    animation: confetti-fall 3s linear forwards;
+    z-index: 1000;
+    border-radius: 2px;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* 星星闪烁效果 */
+.star {
+    position: fixed;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, #ffffff, #ffe5b4);
+    border-radius: 50%;
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 1),
+        0 0 15px rgba(255, 215, 0, 0.8),
+        0 0 25px rgba(255, 215, 0, 0.5);
+    animation: starTwinkle 2s ease-in-out infinite;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.star::before,
+.star::after {
+    content: '';
+    position: absolute;
+    background: white;
+}
+
+.star::before {
+    width: 8px;
+    height: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.star::after {
+    width: 1px;
+    height: 8px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.star.large {
+    width: 6px;
+    height: 6px;
+    box-shadow:
+        0 0 12px rgba(255, 255, 255, 1),
+        0 0 20px rgba(255, 215, 0, 0.9),
+        0 0 35px rgba(255, 215, 0, 0.6);
+}
+
+.star.large::before {
+    width: 12px;
+}
+
+.star.large::after {
+    height: 12px;
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1) rotate(0deg);
+        box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.6),
+            0 0 15px rgba(255, 215, 0, 0.5),
+            0 0 25px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.8) rotate(90deg);
+        box-shadow:
+            0 0 12px rgba(255, 255, 255, 1),
+            0 0 25px rgba(255, 215, 0, 1),
+            0 0 40px rgba(255, 215, 0, 0.7);
+    }
+}
+
+/* 流星效果 */
+.shooting-star {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #ffffff, #ffd700);
+    border-radius: 50%;
+    box-shadow:
+        0 0 20px 4px rgba(255, 255, 255, 1),
+        0 0 40px 8px rgba(255, 215, 0, 0.8),
+        0 0 60px 12px rgba(255, 215, 0, 0.5);
+    z-index: 999;
+    pointer-events: none;
+}
+
+.shooting-star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 4px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 215, 0, 0.9) 20%,
+        rgba(255, 215, 0, 0.6) 40%,
+        rgba(255, 215, 0, 0.3) 60%,
+        transparent 100%
+    );
+    transform-origin: 0 50%;
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 215, 0, 0.4) 30%,
+        transparent 100%
+    );
+    transform-origin: 0 50%;
+    border-radius: 50%;
+}
+
+@keyframes shootingStar {
+    0% {
+        transform: translate(0, 0) rotate(-45deg) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-400px, 400px) rotate(-45deg) scale(0.3);
+        opacity: 0;
+    }
+}
+
+
+@media (max-width: 900px) {
+    .main-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .result {
+        max-width: 100%;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    #wheelCanvas {
+        width: 90vw;
+        height: 90vw;
+        max-width: 400px;
+        max-height: 400px;
+    }
+
+    .spin-button {
+        font-size: 1.1em;
+        padding: 12px 30px;
+    }
+
+    .result-text {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+}
