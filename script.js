@@ -146,6 +146,114 @@ function createConfetti() {
     }
 }
 
+// 创建烟花效果
+function createFireworks() {
+    const colors = ['#ff0844', '#ffb199', '#ffd23f', '#44e5e7', '#7676ff', '#ff6bff', '#00ff88', '#ff3366'];
+
+    function launchFirework() {
+        // 随机位置发射烟花
+        const x = Math.random() * 70 + 15; // 15% - 85% 位置
+        const y = Math.random() * 30 + 15; // 15% - 45% 位置
+
+        // 创建爆炸粒子 - 增加数量
+        const particleCount = 80;
+        const baseColor = colors[Math.floor(Math.random() * colors.length)];
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'firework-particle';
+            particle.style.position = 'fixed';
+            particle.style.left = x + '%';
+            particle.style.top = y + '%';
+            particle.style.width = '10px';  // 增大粒子
+            particle.style.height = '10px';
+            particle.style.borderRadius = '50%';
+            particle.style.background = baseColor;
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '1001';
+
+            // 随机角度和速度 - 增加速度范围
+            const angle = (Math.PI * 2 * i) / particleCount;
+            const velocity = Math.random() * 150 + 100; // 增加速度
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+
+            // 增强光晕效果
+            particle.style.boxShadow = `
+                0 0 15px ${baseColor},
+                0 0 30px ${baseColor},
+                0 0 45px ${baseColor}
+            `;
+
+            document.body.appendChild(particle);
+
+            // 动画
+            let posX = 0;
+            let posY = 0;
+            let opacity = 1;
+            let startTime = Date.now();
+
+            function animateParticle() {
+                const elapsed = (Date.now() - startTime) / 1000;
+
+                if (elapsed > 2 || opacity <= 0) {  // 延长持续时间
+                    particle.remove();
+                    return;
+                }
+
+                // 物理运动（带重力）
+                posX = vx * elapsed;
+                posY = vy * elapsed + 80 * elapsed * elapsed; // 增加重力
+                opacity = 1 - elapsed / 2;
+
+                particle.style.transform = `translate(${posX}px, ${posY}px) scale(${1 - elapsed / 4})`;
+                particle.style.opacity = opacity;
+
+                requestAnimationFrame(animateParticle);
+            }
+
+            animateParticle();
+        }
+
+        // 添加中心闪光
+        const flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.left = x + '%';
+        flash.style.top = y + '%';
+        flash.style.width = '100px';
+        flash.style.height = '100px';
+        flash.style.borderRadius = '50%';
+        flash.style.background = `radial-gradient(circle, ${baseColor}, transparent)`;
+        flash.style.transform = 'translate(-50%, -50%)';
+        flash.style.pointerEvents = 'none';
+        flash.style.zIndex = '1000';
+        flash.style.opacity = '1';
+        flash.style.boxShadow = `0 0 60px 30px ${baseColor}`;
+        document.body.appendChild(flash);
+
+        let flashOpacity = 1;
+        let flashScale = 0;
+        function animateFlash() {
+            flashOpacity -= 0.03;
+            flashScale += 0.1;
+            flash.style.opacity = flashOpacity;
+            flash.style.transform = `translate(-50%, -50%) scale(${flashScale})`;
+
+            if (flashOpacity > 0) {
+                requestAnimationFrame(animateFlash);
+            } else {
+                flash.remove();
+            }
+        }
+        animateFlash();
+    }
+
+    // 连续发射更多烟花
+    for (let i = 0; i < 12; i++) {
+        setTimeout(() => launchFirework(), i * 250);
+    }
+}
+
 // 创建星星闪烁效果
 function createStars() {
     const starCount = 50;
@@ -426,8 +534,13 @@ function spin() {
             }
             resultDiv.innerHTML = `<div class="result-text">${resultText}</div>`;
 
-            // 如果中奖则触发彩纸效果和音效
-            if (winningPrize !== '谢谢惠顾' && winningPrize !== '再来一次') {
+            // 特等奖触发烟花效果
+            if (winningPrize === '特等奖') {
+                playWinSound();
+                createFireworks();
+            }
+            // 其他中奖触发彩纸效果
+            else if (winningPrize !== '谢谢惠顾' && winningPrize !== '再来一次') {
                 playWinSound();
                 createConfetti();
             }
