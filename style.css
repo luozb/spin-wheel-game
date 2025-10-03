@@ -11,7 +11,7 @@ html {
 
 body {
     font-family: 'Microsoft YaHei', Arial, sans-serif;
-    background: url('background.png') center center / cover no-repeat fixed;
+    background: url('background.jpg') center center / cover no-repeat fixed;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -759,9 +759,37 @@ h1 {
     }
 }
 
+/* iPad 适配 */
+@media (min-width: 601px) and (max-width: 1024px) {
+    body {
+        background-attachment: scroll; /* iPad上fixed可能有性能问题 */
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 3em;
+        margin-bottom: 40px;
+    }
+
+    #wheelCanvas {
+        width: 450px;
+        height: 450px;
+    }
+
+    .main-content {
+        gap: 40px;
+    }
+
+    .right-panel {
+        min-width: 280px;
+    }
+}
+
+/* 手机端适配 */
 @media (max-width: 600px) {
     body {
         padding: 20px 10px;
+        background-attachment: scroll; /* 移动端优化 */
     }
 
     h1 {
